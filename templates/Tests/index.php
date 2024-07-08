@@ -54,8 +54,25 @@
                       <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $test->id], ['confirm' => __('Are you sure you want to delete # {0}?', $test->id), 'class'=>'btn btn-danger btn-xs']) ?>
                   </td>
                   <td>
-                  <?= $this->Form->postLink(__('Start'), ['action' => 'start', $test->id], ['confirm' => __('Are you sure you want to start {0}?', $test->test_name), 'class'=>'btn btn-danger btn-xs']) ?>
-                  </td>
+                  <?php 
+                  $match_count = 0;
+                  foreach($tests_results as $tests_resultsv){
+                    if($tests_resultsv['tests_id'] == $test->id){  
+                      $match_count = 1;
+                      $tests_results_status = $tests_resultsv['status'] ;
+                    }
+                  } 
+                  //debug($tests_results_status);  
+                  if($match_count && $tests_results_status==1){ ?>
+                  <?= $this->Form->postLink(__('Resume'), ['action' => 'resume', $test->id], ['confirm' => __('Are you sure you want to resume {0}?', $test->test_name), 'class'=>'btn btn-danger btn-xs']); ?>
+                  <?php } 
+                  elseif($match_count && $tests_results_status==2){ ?>
+                  <?= $this->Form->postLink(__('Show Result'), ['controller'=>'users','action' => 'dashboard'],['class'=>'btn btn-success btn-xs']); ?>
+                  <?php } 
+                  else { ?>
+                  <?= $this->Form->postLink(__('Start'), ['action' => 'start', $test->id], ['confirm' => __('Are you sure you want to start {0}?', $test->test_name), 'class'=>'btn btn-danger btn-xs']); ?>
+                  <?php } ?>
+                </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>

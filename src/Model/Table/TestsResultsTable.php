@@ -49,8 +49,8 @@ class TestsResultsTable extends Table
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('Tests', [
-            'foreignKey' => 'tests_id',
-            'joinType' => 'INNER',
+            'foreignKey' => 'tests_id', // Adjust this according to your database schema
+            'joinType' => 'INNER', // Optionally specify join type
         ]);
     }
 
