@@ -56,6 +56,9 @@ class TestsTable extends Table
             'foreignKey' => 'tests_id',
             'joinType' => 'INNER',
         ]);
+        $this->hasMany('TestsResults', [
+            'foreignKey' => 'tests_id', // Adjust this according to your database schema
+        ]);
     }
 
     /**

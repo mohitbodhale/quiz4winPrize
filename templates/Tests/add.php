@@ -32,7 +32,21 @@
                 echo $this->Form->control('test_name');
                 echo $this->Form->control('slots_id', ['options' => $slots]);
                 echo $this->Form->control('status');
+                //debug($quizs);
                 echo $this->Form->control('quizs_id', ['options' => $quizs]);
+                echo $this->Form->control('date_start_from', [
+                  'type' => 'datetime',
+                  'label' => 'Start Date and Time',
+                  'default' => date('Y-m-d H:i:s'), // Set a default value if needed
+                  'empty' => true // If you want the field to be initially empty
+                ]);
+                echo $this->Form->control('date_valid_till', [
+                  'type' => 'datetime',
+                  'label' => 'End Date and Time',
+                  'default' => date('Y-m-d H:i:s'), // Set a default value if needed
+                  'empty' => true // If you want the field to be initially empty
+                ]);
+                
               ?>
             </div>
             <!-- /.box-body -->

@@ -18,12 +18,18 @@ class TestsController extends AppController
      */
     public function index()
     {
+        $loginuser = $this->Auth->user();
         $this->paginate = [
             'contain' => ['Slots','Quizs'],
         ];
         $tests = $this->paginate($this->Tests);
 
-        $this->set(compact('tests'));
+        $this->loadModel('TestsResults');
+        $tests_results = $this->TestsResults->find('all',[
+            'conditions'=>['users_id'=>$loginuser['id']]
+        ])->toArray();
+        
+        $this->set(compact('tests','tests_results'));
     }
 
     /**
@@ -60,8 +66,10 @@ class TestsController extends AppController
             }
             $this->Flash->error(__('The {0} could not be saved. Please, try again.', 'Test'));
         }
-        $slots = $this->Tests->Slots->find('list', ['limit' => 200]);
-        $quizsDetails = $this->Tests->QuizsDetails->find('list', ['limit' => 200]);
+        $this->loadModel('Quizs');
+        $this->loadModel('Slots');
+        $slots = $this->Slots->find('list',['keyField'=>'id','valueField'=>'slots_name']);
+        $quizs = $this->Quizs->find('list',['keyField'=>'id','valueField'=>'quiz_name']);
         $this->set(compact('test', 'slots', 'quizs'));
     }
 
@@ -87,8 +95,10 @@ class TestsController extends AppController
             }
             $this->Flash->error(__('The {0} could not be saved. Please, try again.', 'Test'));
         }
-        $slots = $this->Tests->Slots->find('list', ['limit' => 200]);
-        $quizsDetails = $this->Tests->QuizsDetails->find('list', ['limit' => 200]);
+        $this->loadModel('Quizs');
+        $this->loadModel('Slots');
+        $slots = $this->Slots->find('list',['keyField'=>'id','valueField'=>'slots_name']);
+        $quizs = $this->Quizs->find('list',['keyField'=>'id','valueField'=>'quiz_name']);
         $this->set(compact('test', 'slots', 'quizs'));
     }
 
@@ -119,6 +129,16 @@ class TestsController extends AppController
                 'TestsDetails'=>['Quetions'=>['QuetionsDetails'=>['AvailableOptionsValues']]],
             ],
         ]);
+        // Extract the TestsDetails collection
+        $testsDetails = $test->tests_details;
+        // Convert to array and shuffle to randomize
+        $randomTestsDetails = $testsDetails;
+        shuffle($randomTestsDetails);
+        // Assign the randomized TestsDetails back to the Test entity
+        $test->tests_details = $randomTestsDetails;
+        if ($this->request->is(['patch', 'post', 'put'])) {    
+            //echo $this->request->getSession()->read('remainingSeconds');
+        }
         $this->set(compact('test'));
     }
 

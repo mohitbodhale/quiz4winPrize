@@ -1,13 +1,13 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Test $test
+ * @var \App\Model\Entity\Group $group
  */
 ?>
 <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Test
+      Group
       <small><?php echo __('Edit'); ?></small>
     </h1>
     <ol class="breadcrumb">
@@ -26,25 +26,10 @@
           </div>
           <!-- /.box-header -->
           <!-- form start -->
-          <?php echo $this->Form->create($test, ['role' => 'form']); ?>
+          <?php echo $this->Form->create($group, ['role' => 'form']); ?>
             <div class="box-body">
               <?php
-                echo $this->Form->control('test_name');
-                echo $this->Form->control('slots_id', ['options' => $slots]);
-                echo $this->Form->control('status');
-                echo $this->Form->control('quizs_id', ['options' => $quizs]);
-                echo $this->Form->control('date_start_from', [
-                  'type' => 'datetime',
-                  'label' => 'Start Date and Time',
-                  'default' => date('Y-m-d H:i:s'), // Set a default value if needed
-                  'empty' => true // If you want the field to be initially empty
-                ]);
-                echo $this->Form->control('date_valid_till', [
-                  'type' => 'datetime',
-                  'label' => 'End Date and Time',
-                  'default' => date('Y-m-d H:i:s'), // Set a default value if needed
-                  'empty' => true // If you want the field to be initially empty
-                ]);
+                echo $this->Form->control('name');
               ?>
             </div>
             <!-- /.box-body -->
