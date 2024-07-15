@@ -20,15 +20,27 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title"><?php echo __('List'); ?></h3>
-          <div class="pull-right">
             <div class="row begin-countdown">
-              <div class="col-md-12 text-center">
-                <progress value="10" max="10" id="pageBeginCountdown"></progress>
-                <p> Ending in <span id="pageBeginCountdownText">600</span> seconds</p>
+              <div class="col-md-12 text-right">
+                <div class="row col-md-3 text-left">
+                  <p><b>Today : </b>
+                  <span id="current-date-time"></span></p>
+                </div>  
+                <div class="col-md-3">
+                <p><b>Start Time : </b>
+                  <span id="date-start-time"><?php echo $test->date_start_from; ?></span></p>
+                </div>
+                <div class="col-md-3">
+                  <p><b>End Time : </b>
+                  <span id="end-date-time"><?php echo $test->date_valid_till; ?></span></p>
+                </div>
+                <div class="col-md-3">
+                  <p><b>Remaining Time : </b><span id="pageBeginCountdownText">600</span> sec.
+                  <progress value="10" max="600" id="pageBeginCountdown"></progress></p>
+                </div>
               </div>
             </div>
-          </div>
+          
           <div class="box-tools">
             <!-- Form commented out for brevity -->
           </div>
@@ -133,7 +145,7 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
   return new Promise((resolve, reject) => {
     countdownTimer = setInterval(() => {
       timeleft--;
-      console.log(timeleft);
+      //console.log(timeleft);
       remainingSeconds = timeleft;
       document.getElementById('pageBeginCountdown').value = remainingSeconds;
       document.getElementById('pageBeginCountdownText').textContent = remainingSeconds;
@@ -146,7 +158,38 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
     }, 1000);
   });
 }
+startCountdown();
+// JavaScript code to display date and time
+document.addEventListener('DOMContentLoaded', function() {
+    function updateDateTime() {
+        var dateTimeElement = document.getElementById('current-date-time');
+        if (dateTimeElement) {
+            // Update the element with the current date and time in 24-hour format
+            dateTimeElement.innerText = moment().format('MMMM Do YYYY, HH:mm:ss');
+        }
+        //console.log(moment().format('MMMM Do YYYY, HH:mm:ss'));
+    }
 
-  startCountdown();
+    // Initial call to display the date and time immediately
+    updateDateTime();
+
+    // Update the date and time every second
+    setInterval(updateDateTime, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var dateStartFromElement = document.getElementById('date-start-time');
+    if (dateStartFromElement) {
+        var dateStartFrom = moment(dateStartFromElement.innerText.trim(), 'M/D/YY, h:mm A');
+        dateStartFromElement.innerText = dateStartFrom.format('MMMM Do YYYY, HH:mm:ss');
+    }
+
+    var dateEndToElement = document.getElementById('end-date-time');
+    if (dateStartFromElement) {
+        var dateEndTo = moment(dateEndToElement.innerText.trim(), 'M/D/YY, h:mm A');
+        dateEndToElement.innerText = dateEndTo.format('MMMM Do YYYY, HH:mm:ss');
+    }
+});
+
 
 </script>

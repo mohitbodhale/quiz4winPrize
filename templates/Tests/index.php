@@ -36,6 +36,8 @@
                   <th scope="col"><?= $this->Paginator->sort('test_name') ?></th>
                   <th scope="col"><?= $this->Paginator->sort('slots_id') ?></th>
                   <th scope="col"><?= $this->Paginator->sort('quizs_id') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('start_time') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('end_time') ?></th>
                   <th scope="col"><?= $this->Paginator->sort('status') ?></th>
                   <th scope="col" class="actions text-center"><?= __('Actions') ?></th>
               </tr>
@@ -47,6 +49,16 @@
                   <td><?= h($test->test_name) ?></td>
                   <td><?= h($test->slot->slots_name) ?></td>
                   <td><?= h($test->quiz->quiz_name) ?></td>
+                  <td>
+                    <span id="date-start-time">
+                      <?php echo $test->date_start_from; ?>
+                    </span>
+                  </td>
+                  <td>
+                    <span id="end-date-time">
+                    <?php echo $test->date_valid_till; ?>  
+                    </span>
+                  </td>
                   <td><?= $this->Number->format($test->status) ?></td>
                   <td class="actions text-right">
                       <?= $this->Html->link(__('View'), ['action' => 'view', $test->id], ['class'=>'btn btn-info btn-xs']) ?>
@@ -84,3 +96,8 @@
     </div>
   </div>
 </section>
+
+<script>
+
+
+</script>
