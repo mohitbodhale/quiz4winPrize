@@ -191,7 +191,6 @@ class TestsController extends AppController
         $this->loadModel('TestsResults');
         if($other_data){
             //echo "add test result detail in db";
-            // debug($test['id']);
             $testsResultsData['users_id'] = $other_data['user_id'];
             $testsResultsData['tests_id'] = $test['id'];
             $testsResultsData['comparisons'] = json_encode($user_answers);
