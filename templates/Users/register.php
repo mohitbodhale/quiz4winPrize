@@ -1,42 +1,71 @@
-<section class="content-header">
-  <h1>
-    User
-    <small><?php echo __('Register'); ?></small>
-  </h1>
-  <ol class="breadcrumb">
-  <?php if ($authUser): ?>
-    <li><a href="<?php echo $this->Url->build(['action' => 'index']); ?>"><i class="fa fa-dashboard"></i> <?php echo __('Home'); ?></a></li>
-  <?php endif; ?>  
-  </ol>
-</section>
+<style>
+hr {border: 2px solid #3c8dbccc;}
+.login-box, .register-box {
+    font-family: 'Source Sans Pro';
+    font-size: larger;
+    float: right;
+    margin-right: 5%;
+    width: 25%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.5); /* semi-transparent background only */
+    padding: 20px;
+}
+.login-box-body, .register-box-body {
+    background: rgb(255 255 255 / 0%);
+    padding: 20px;
+    border-top: 0;
+    color: #000; 
+}
+</style>
+<?php
+use Cake\Core\Configure;
+$this->layout = 'register'; 
+?>
 
-<!-- Main content -->
 <section class="content">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="box box-solid">
-        <div class="box-header with-border">
-          
-          
-        <!-- /.box-header -->
-        <div class="box-body">
-            <dl class="dl-horizontal">
-            <?= $this->Form->create($user) ?>
-            <fieldset>
-                <legend><?= __('Please enter your details') ?></legend>
-                <?= $this->Form->control('username') ?>
-                <?= $this->Form->control('email') ?>
-                <?= $this->Form->control('password') ?>
-            </fieldset>
-            <?= $this->Form->button(__('Register')) ?>
-            <?php if (!$authUser): ?>
-                <?= $this->Html->link(__('Login'), ['controller' => 'Users', 'action' => 'login'], ['class' => 'btn btn-primary btn-flat']) ?>
-            <?php endif; ?> 
-            <?= $this->Form->end() ?>
-            </dl>
-        </div>
-      </div>
+  <div class="forms-container">
+    <div class="signin-signup">
+        <?= $this->Form->create($user) ?>
+          <?= $this->Flash->render(); ?>
+          <div class="input-field">
+              <span>Username</span>
+              <span class="" style="float: right;"><i class="fa fa-user" style=""></i></span>
+              <?= $this->Form->control('username', [
+                  'label' => false, 
+                  'placeholder' => '', 
+                  'required' => true, 
+                  'class' => 'form-control'
+              ]); ?>
+          </div>
+          <div class="input-field">
+              <span>Email Id</span>
+              <span class="" style="float: right;"><i class="fa fa-envelope-square" style=""></i></span>
+              <?= $this->Form->control('email', [
+                  'label' => false, 
+                  'placeholder' => '', 
+                  'required' => true, 
+                  'class' => 'form-control'
+              ]); ?>
+          </div>
+          <div class="input-field">
+              <span>Password</span>
+              <span class="" style="float: right;"><i class="fa fa-lock"></i></span>
+              <?= $this->Form->control('password', [
+                  'type' => 'password', 
+                  'label' => false, 
+                  'placeholder' => '', 
+                  'required' => true, 
+                  'class' => 'form-control'
+              ]); ?>
+          </div>
+          <!-- <?php if (!$authUser): ?>
+              <?= $this->Html->link(__('Login'), ['controller' => 'Users', 'action' => 'login'], ['class' => 'btn btn-primary btn-flat text-sm']) ?>
+          <?php endif; ?>  -->
+          <?= $this->Form->button(__('Register') ,['class' => 'btn btn-success btn-flat text-sm',"style"=>"float: inline-end;"] ) ?>
+          <?= $this->Form->end() ?>
+          </dl>
     </div>
   </div>
-
 </section>
+
