@@ -70,16 +70,21 @@
                     <td>
                     <?php 
                     $match_count = 0;
-                    
-                    foreach($tests_results as $tests_resultsv){
-                      $currentDateTime = strtotime(date('Y-m-d H:i:s'));
+                    // debug($tests_results);
+                    $currentDateTime = strtotime(date('Y-m-d H:i:s'));
+                    if(!empty($tests_results)){
+                      foreach($tests_results as $tests_resultsv){
+                        $startDateTime = strtotime($test->date_start_from);
+                        $endDateTime = strtotime($test->date_valid_till);
+                        if($tests_resultsv['tests_id'] == $test->id){  
+                          $match_count = 1;
+                          $tests_results_status = $tests_resultsv['status'] ;
+                        }
+                      } 
+                    }else{
                       $startDateTime = strtotime($test->date_start_from);
                       $endDateTime = strtotime($test->date_valid_till);
-                      if($tests_resultsv['tests_id'] == $test->id){  
-                        $match_count = 1;
-                        $tests_results_status = $tests_resultsv['status'] ;
-                      }
-                    } 
+                    }
                     if($match_count && $tests_results_status==1){ ?>
                       <?= $this->Form->postLink(__('Resume'), ['action' => 'resume', $test->id], ['confirm' => __('Are you sure you want to resume {0}?', $test->test_name), 'class'=>'btn btn-danger btn-xs']); ?>
                     <?php } 
