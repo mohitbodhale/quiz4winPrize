@@ -1,7 +1,8 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Products
+    Uom
+
     <div class="pull-right"><?php echo $this->Html->link(__('New'), ['action' => 'add'], ['class'=>'btn btn-success btn-xs']) ?></div>
   </h1>
 </section>
@@ -32,21 +33,25 @@
             <thead>
               <tr>
                   <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                  <th scope="col"><?= $this->Paginator->sort('product_name') ?></th>
-                  <th scope="col"><?= $this->Paginator->sort('product_code') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('unit_name') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('unit_symbol') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('unit_type') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('convertor') ?></th>
                   <th scope="col" class="actions text-center"><?= __('Actions') ?></th>
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($products as $product): ?>
+              <?php foreach ($uom as $uom): ?>
                 <tr>
-                  <td><?= $this->Number->format($product->id) ?></td>
-                  <td><?= h($product->product_name) ?></td>
-                  <td><?= h($product->product_code) ?></td>
+                  <td><?= $this->Number->format($uom->id) ?></td>
+                  <td><?= h($uom->unit_name) ?></td>
+                  <td><?= h($uom->unit_symbol) ?></td>
+                  <td><?= h($uom->unit_type) ?></td>
+                  <td><?= $this->Number->format($uom->convertor) ?></td>
                   <td class="actions text-right">
-                      <?= $this->Html->link(__('View'), ['action' => 'view', $product->id], ['class'=>'btn btn-info btn-xs']) ?>
-                      <?= $this->Html->link(__('Edit'), ['action' => 'edit', $product->id], ['class'=>'btn btn-warning btn-xs']) ?>
-                      <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $product->id], ['confirm' => __('Are you sure you want to delete # {0}?', $product->id), 'class'=>'btn btn-danger btn-xs']) ?>
+                      <?= $this->Html->link(__('View'), ['action' => 'view', $uom->id], ['class'=>'btn btn-info btn-xs']) ?>
+                      <?= $this->Html->link(__('Edit'), ['action' => 'edit', $uom->id], ['class'=>'btn btn-warning btn-xs']) ?>
+                      <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $uom->id], ['confirm' => __('Are you sure you want to delete # {0}?', $uom->id), 'class'=>'btn btn-danger btn-xs']) ?>
                   </td>
                 </tr>
               <?php endforeach; ?>

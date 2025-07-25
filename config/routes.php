@@ -21,9 +21,9 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Routing\Route\DashedRoute;
-use Cake\Routing\RouteBuilder;
-
+ use Cake\Routing\RouteBuilder;
+ use Cake\Routing\Router;
+ use Cake\Routing\Route\DashedRoute;
 /*
  * This file is loaded in the context of the `Application` class.
   * So you can use  `$this` to reference the application class instance
@@ -77,7 +77,8 @@ return function (RouteBuilder $routes): void {
          */
         $builder->fallbacks();
     });
-
+    $routes->setExtensions(['json']);
+    
     /*
      * If you need a different set of middleware or none at all,
      * open new scope and define routes there.

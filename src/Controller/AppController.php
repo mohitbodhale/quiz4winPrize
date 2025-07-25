@@ -52,7 +52,7 @@ class AppController extends Controller
             // If you want to pass this data to a view, use the following:
             $this->set('userData', $userData);
         }
-        $this->Auth->allow(['login', 'register', 'add','dashboard']);
+        $this->Auth->allow(['login', 'register', 'add','dashboard','postRawDataProductsMaster']);
     }
 
     public function beforeFilter(EventInterface $event)

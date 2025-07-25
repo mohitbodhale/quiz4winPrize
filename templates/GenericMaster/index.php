@@ -1,7 +1,8 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Products
+    Generic Master
+
     <div class="pull-right"><?php echo $this->Html->link(__('New'), ['action' => 'add'], ['class'=>'btn btn-success btn-xs']) ?></div>
   </h1>
 </section>
@@ -32,21 +33,25 @@
             <thead>
               <tr>
                   <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                  <th scope="col"><?= $this->Paginator->sort('product_name') ?></th>
-                  <th scope="col"><?= $this->Paginator->sort('product_code') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('generic_name') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('std_kg_qty') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('specific_gr_limit') ?></th>
+                  <th scope="col"><?= $this->Paginator->sort('std_kg_qty_uom') ?></th>
                   <th scope="col" class="actions text-center"><?= __('Actions') ?></th>
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($products as $product): ?>
+              <?php foreach ($genericMaster as $genericMaster): ?>
                 <tr>
-                  <td><?= $this->Number->format($product->id) ?></td>
-                  <td><?= h($product->product_name) ?></td>
-                  <td><?= h($product->product_code) ?></td>
+                  <td><?= $this->Number->format($genericMaster->id) ?></td>
+                  <td><?= h($genericMaster->generic_name) ?></td>
+                  <td><?= $this->Number->format($genericMaster->std_kg_qty) ?></td>
+                  <td><?= h($genericMaster->specific_gr_limit) ?></td>
+                  <td><?= $this->Number->format($genericMaster->std_kg_qty_uom) ?></td>
                   <td class="actions text-right">
-                      <?= $this->Html->link(__('View'), ['action' => 'view', $product->id], ['class'=>'btn btn-info btn-xs']) ?>
-                      <?= $this->Html->link(__('Edit'), ['action' => 'edit', $product->id], ['class'=>'btn btn-warning btn-xs']) ?>
-                      <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $product->id], ['confirm' => __('Are you sure you want to delete # {0}?', $product->id), 'class'=>'btn btn-danger btn-xs']) ?>
+                      <?= $this->Html->link(__('View'), ['action' => 'view', $genericMaster->id], ['class'=>'btn btn-info btn-xs']) ?>
+                      <?= $this->Html->link(__('Edit'), ['action' => 'edit', $genericMaster->id], ['class'=>'btn btn-warning btn-xs']) ?>
+                      <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $genericMaster->id], ['confirm' => __('Are you sure you want to delete # {0}?', $genericMaster->id), 'class'=>'btn btn-danger btn-xs']) ?>
                   </td>
                 </tr>
               <?php endforeach; ?>
