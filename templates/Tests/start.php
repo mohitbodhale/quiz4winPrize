@@ -1,3 +1,74 @@
+<?php
+// Place this PHP block at the top of your view file, before any HTML output.
+// This handles insertion on first load and calculation/update on refresh.
+// Adjust model/table names if needed. Assumes CakePHP ORM.
+
+use Cake\ORM\TableRegistry;
+use Cake\I18n\FrozenTime; // For proper datetime handling if needed
+
+$TestAttempts = TableRegistry::getTableLocator()->get('TestAttempts');
+
+// Get current user and test (assuming $authUser and $test are available from controller)
+$users_id = $authUser['id'];
+$tests_id = $test->id;
+$now = date('Y-m-d H:i:s');
+
+// Parse test duration to total seconds (assuming format HH:MM:SS)
+$duration_parts = explode(':', $test->test_duration_time);
+$total_sec = ((int)$duration_parts[0] * 3600) + ((int)$duration_parts[1] * 60) + ((int)$duration_parts[2]);
+
+// Find existing active attempt (latest started one)
+$attempt = $TestAttempts->find()
+    ->where([
+        'users_id' => $users_id,
+        'tests_id' => $tests_id,
+        'status' => 'started'
+    ])
+    ->order(['created' => 'DESC'])
+    ->first();
+
+$remaining_sec = 0; // Default to 0 if expired
+if ($attempt) {
+    // Calculate elapsed time
+    $start_timestamp = strtotime($attempt->start_time);
+    $elapsed = strtotime($now) - $start_timestamp;
+    $remaining_sec = max(0, $total_sec - $elapsed);
+
+    if ($remaining_sec <= 0) {
+        // Test expired: Update status and end_time
+        $attempt->status = 'expired';
+        $attempt->end_time = $now;
+        $attempt->modified = $now;
+        $TestAttempts->save($attempt);
+        // Optional: Redirect or show message (e.g., $this->Flash->error('Test time expired.');)
+        // For now, just set remaining to 0 and let JS alert on load
+    } else {
+        // Update modified timestamp on refresh
+        $attempt->modified = $now;
+        $TestAttempts->save($attempt);
+    }
+} else {
+    // First load: Create new attempt
+    $start_time = $now;
+    $end_time = date('Y-m-d H:i:s', strtotime($now . ' + ' . $total_sec . ' seconds'));
+
+    $attempt_data = [
+        'users_id' => $users_id,
+        'tests_id' => $tests_id,
+        'status' => 'started',
+        'start_time' => $start_time,
+        'end_time' => $end_time,
+        'created' => $now,
+        'modified' => $now
+    ];
+
+    $new_attempt = $TestAttempts->newEntity($attempt_data);
+    $TestAttempts->save($new_attempt);
+    $remaining_sec = $total_sec;
+}
+
+// Optional: If expired, you can add here: echo $this->element('expired_message'); or similar
+?>
 <style>
 .q_srno{
 border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;background-color: white;color: #0a0a0a;
@@ -32,7 +103,7 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
                 </div>
                 <div class="col-md-3">
                   <p><b>End Time : </b>
-                  <span id="end-date-time"><?php echo $test->date_valid_till; ?></span></p>
+                  <span id="date-valid-till"><?php echo $test->date_valid_till; ?></span></p>
                 </div>
                 <div class="col-md-2">
                   <p><b>Duration : </b>
@@ -43,8 +114,8 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
                     ?></span></p>
                 </div>
                 <div class="col-md-2">
-                  <p><b>Remaining Time : </b><span id="pageBeginCountdownText">600</span> sec.
-                  <progress value="10" max="600" id="pageBeginCountdown"></progress></p>
+                  <p><b>Remaining Time : </b><span id="pageBeginCountdownText"><?php echo $remaining_sec; ?></span> sec.
+                  <progress value="<?php echo $remaining_sec; ?>" max="<?php echo $total_sec; ?>" id="pageBeginCountdown"></progress></p>
                 </div>
               </div>
             </div>
@@ -60,7 +131,7 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
             <tbody>
               <?= $this->Form->create(null, ['url' => ['controller' => 'Tests', 'action' => 'end_test', $test->id], 'type' => 'POST']); ?>
               <?php
-              echo $this->Form->hidden('other_data[tests_time]', ['id' => 'tests_time', 'type' => 'text']);
+              echo $this->Form->hidden('other_data[tests_time]', ['id' => 'tests_time', 'type' => 'text', 'value' => $remaining_sec]);
               echo $this->Form->hidden('other_data[user_id]', ['value' => $authUser['id'], 'type' => 'text']);
 
               $questions = $test->tests_details; // Assuming $test->tests_details contains your questions
@@ -130,11 +201,17 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
 </script>
 <script type="text/javascript">
   let countdownTimer;
-  let remainingSeconds = parseInt(document.getElementById('tests_time').value) || 600; // Retrieve initial value from hidden input or default to 600
+  let remainingSeconds = parseInt(document.getElementById('tests_time').value) || <?php echo $total_sec; ?>; // Use dynamic total_sec as fallback
   function startCountdown() {
     clearInterval(countdownTimer);
+    if (remainingSeconds <= 0) {
+      alert('Test time expired or finished.');
+      return; // Don't start countdown if already 0
+    }
     ProgressCountdown(remainingSeconds, 'pageBeginCountdown', 'pageBeginCountdownText').then(() => {
       alert('Countdown finished.');
+      // Optional: Auto-submit form or redirect on timeout
+      // document.querySelector('form').submit();
     });
   }
 
@@ -144,7 +221,7 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
 
   function resetCountdown() {
     clearInterval(countdownTimer);
-    remainingSeconds = 600; // Reset to initial value
+    remainingSeconds = <?php echo $total_sec; ?>; // Reset to total duration (but typically not used on refresh)
     document.getElementById('pageBeginCountdown').value = remainingSeconds;
     document.getElementById('pageBeginCountdownText').textContent = remainingSeconds;
     document.getElementById('tests_time').value = remainingSeconds; // Update hidden input value
@@ -192,12 +269,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dateStartFromElement.innerText = dateStartFrom.format('MMMM Do YYYY, HH:mm:ss');
     }
 
-    var dateEndToElement = document.getElementById('end-date-time');
-    if (dateStartFromElement) {
+    var dateEndToElement = document.getElementById('date-valid-till');
+    if (dateEndToElement) {
         var dateEndTo = moment(dateEndToElement.innerText.trim(), 'M/D/YY, h:mm A');
         dateEndToElement.innerText = dateEndTo.format('MMMM Do YYYY, HH:mm:ss');
     }
 });
-
-
 </script>
