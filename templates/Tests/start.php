@@ -22,7 +22,7 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
         <div class="box-header">
             <div class="row begin-countdown">
               <div class="col-md-12 text-right">
-                <div class="row col-md-3 text-left">
+                <div class="row col-md-2 text-left">
                   <p><b>Today : </b>
                   <span id="current-date-time"></span></p>
                 </div>  
@@ -34,7 +34,15 @@ border-style: outset;border-radius: 50%;padding-right:4px;padding-left:4px;backg
                   <p><b>End Time : </b>
                   <span id="end-date-time"><?php echo $test->date_valid_till; ?></span></p>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                  <p><b>Duration : </b>
+                  <span id="test_duration_time">
+                    <?php
+                      $duration_in_hms = explode(":",$test->test_duration_time); 
+                      echo $duration_in_hms[1]." Min , " .$duration_in_hms[2]." Sec." ; 
+                    ?></span></p>
+                </div>
+                <div class="col-md-2">
                   <p><b>Remaining Time : </b><span id="pageBeginCountdownText">600</span> sec.
                   <progress value="10" max="600" id="pageBeginCountdown"></progress></p>
                 </div>

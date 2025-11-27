@@ -37,5 +37,6 @@ class Test extends Entity
         'quiz' => true,
         'date_start_from'=>true,
         'date_valid_till'=>true,
+        'test_duration_time' => true
     ];
 }
