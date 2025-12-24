@@ -16,7 +16,7 @@ class UsersController extends AppController
     {
         parent::initialize();
         // Load Format helper for the index action
-        
+        $this->loadComponent('ResultCalculations');
         // Check if user is already logged in
         if ($this->Auth->user()) {
             $loginuser = $this->Auth->user();
@@ -178,6 +178,8 @@ class UsersController extends AppController
             //->group('Users.id')
             ->toArray();
         $tests = $this->Tests->find('all')->toArray();
+
+        // find ranks 
         // Pass the grouped results to the view
         $this->set(compact('testsResults','tests'));
     }

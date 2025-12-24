@@ -133,6 +133,7 @@ class QuetionsDetailsController extends AppController
      */
     public function delete($id = null)
     {
+        $this->Authorization->skipAuthorization();
         $this->request->allowMethod(['post', 'delete']);
         $quetionsDetail = $this->QuetionsDetails->get($id);
         if ($this->QuetionsDetails->delete($quetionsDetail)) {
